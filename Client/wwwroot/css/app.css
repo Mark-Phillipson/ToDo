@@ -62,3 +62,12 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.form-control:focus:focus-visible:focus-within{
+    color:#fff;
+    background-color:#272c30;
+}
+.form-control {
+    color:white;
+    background-color:#272b30
+}

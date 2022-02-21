@@ -1,0 +1,20 @@
+﻿
+
+<div class="position-relative" style="background-color: #222">
+    <br>
+    <br>
+    <br>
+    <textarea style="font-size:x-large" rows="@Rows" class="form-control" @bind="Text" @bind:event="oninput" placeholder="Dictate here, and then click Copy to put in the clipboard.  Click Save to put into the to do list." id="DictationBox" />
+
+    <span class="text-danger">
+        @Result
+
+</span>
+
+<div style="position:absolute; top: 10px; right: 10px;">
+    <button type="button" class="btn btn-primary" @onclick="CopyTextToClipboard">Copy</button>
+    <button type="button" class="btn btn-outline-danger" @onclick="ClearDictationAsync">Clear</button>
+    <button type="button" class="btn btn-outline-success" @onclick="AddToDoAsync">Save</button>
+</div>
+</div>
+

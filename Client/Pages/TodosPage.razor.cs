@@ -20,7 +20,6 @@ namespace BlazorApp.Client.Pages
 	{
 		private List<ToDoList> todos;
 		[Inject] public ILocalStorageService LocalStorage { get; set; }
-		
 		[Inject] HttpClient Http { get; set; }
 		[Inject] IJSRuntime JSRuntime{ get; set; }
 		[Inject] IToastService toastService{ get; set; }
@@ -29,6 +28,7 @@ namespace BlazorApp.Client.Pages
 		private string message = "";
 		private bool _loadFailed = false;
 		ElementReference SearchInput;
+		private int textboxAreaRows = 2;
 #pragma warning restore 414, 649, 169
 		private string SearchTerm { get; set; }
 		public bool ShowCompleted { get; set; } = true;
@@ -130,6 +130,14 @@ namespace BlazorApp.Client.Pages
 				"clipboardCopy.copyText", todo.Description);
 			toastService.ShowSuccess( $"Copied Successfully at {DateTime.Now:hh:mm}","Happy Days");
 		}
+		private void IncreaseHeight()
+		{
+			textboxAreaRows++;
 
+		}
+		private void DecreaseHeight()
+		{
+			textboxAreaRows--;
+		}
 	}
 }

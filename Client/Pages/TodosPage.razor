@@ -7,7 +7,10 @@ else
 {
     <div class="d-none d-sm-block">
         <h1 style="text-align:left;float:left">@title </h1>
-        <input class="form-control" style="text-align:right;float:right;max-width:400px" type="text" @bind="SearchTerm" id="SearchTermBig" @bind:event="oninput" @onblur="@(e => CallChangeAsync("SearchTermBig"))" placeholder="Type to filter" />
+        <button class="btn btn-info btn-sm m-2" type="button" @onclick="@( ( ) => IncreaseHeight(  ) )"><i class="oi oi-fullscreen-enter"></i></button>
+        <button class="btn btn-warning btn-sm" type="button" @onclick="@( ( ) => DecreaseHeight(  ) )"><i class="oi oi-fullscreen-exit"></i></button>
+        <input class="form-control" style="text-align:right;float:right;max-width:400px" type="text" @bind="SearchTerm" 
+id="SearchTermBig" @bind:event="oninput" @onblur="@(e => CallChangeAsync("SearchTermBig"))" placeholder="Type to filter" />
         <hr style="clear:both;" />
         <div class="row">
             <div class="btn-group">
@@ -43,14 +46,10 @@ else
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div class="d-none d-sm-block">
-            @*			<p>
-                To-Do list stored in local storage only. Click <button type="submit" class="btn btn-success">Save All</button> to persist on device.
-                </p>
-            *@			<table class="table table-striped">
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>Date Created</th>
-                        @*<th>Title</th>*@
                         <th>Description</th>
                         <th>Completed</th>
                         <th></th>
@@ -69,23 +68,14 @@ else
                                     </td>
                                     @if (todo.Completed)
                                     {
-                                        @*										<td>
-                                            @todo.Title
-                                            </td>
-                                        *@
                                         <td>
                                             @todo.Description
                                         </td>
                                     }
                                     else
                                     {
-                                        @*										<td>
-
-                                            <input class="form-control " @bind="@todo.Title" @bind:event="oninput" @onblur="@(e => CallChangeAsync($"{todo.Id}TitleInputBig"))" id="@($"{todo.Id}TitleInputBig")" />
-                                            </td>
-                                        *@
                                         <td>
-                                            <textarea rows="2" class="form-control" @bind="todo.Description" @bind:event="oninput" @onblur="@(e => CallChangeAsync($"{todo.Id}DescriptionInputBig"))" id="@($"{todo.Id}DescriptionInputBig")" />
+                                            <textarea rows="@textboxAreaRows" class="form-control" @bind="todo.Description" @bind:event="oninput" @onblur="@(e => CallChangeAsync($"{todo.Id}DescriptionInputBig"))" id="@($"{todo.Id}DescriptionInputBig")"  />
                                         </td>
                                     }
                                     <td>
@@ -113,13 +103,6 @@ else
                             {
                                 @if (todo.Completed)
                                 {
-                                    @*									<tr>
-
-                                        <td colspan="3">
-                                        @todo.Title
-                                        </td>
-                                        </tr>
-                                    *@
                                     <tr>
                                         <th colspan="2">Description</th>
                                         <td>
@@ -134,12 +117,6 @@ else
                                 }
                                 else
                                 {
-                                    @*									<tr>
-                                        <td colspan="3">
-                                        <input class="form-control " @bind="@todo.Title" @bind:event="oninput" @onblur="@(e => CallChangeAsync($"{todo.Id}TitleInput"))" id="@($"{todo.Id}TitleInput")" />
-                                        </td>
-                                        </tr>
-                                    *@
                                     <tr>
                                         <th colspan="2">Description</th>
                                         <td>
@@ -188,7 +165,7 @@ else
         </div>
         <div class="d-sm-none">
             <div class="btn-group">
-                <div class="m-1"><button class="btn btn-sm btn-success" @onclick="AddToDoAsync">Add <span class="oi oi-plus" aria-hidden="true"></span></button></div>
+                <div class="m-1"><button class="btn btn-sm btn-success" @onclick="AddToDoAsync"><span class="oi oi-plus" aria-hidden="true"></span></button></div>
                 <div class="m-1"><button type="submit" class="btn btn-sm btn-success">Save</button></div>
                 <div class="m-1"><button class="btn btn-sm btn-info" @onclick="ReloadTodosAsync">Reload</button></div>
                 <label class="m-1 col-form-label col-form-label-sm">Completed</label>

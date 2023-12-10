@@ -128,7 +128,7 @@ namespace BlazorApp.Client.Pages
 		{
 			await JSRuntime.InvokeVoidAsync(
 				"clipboardCopy.copyText", todo.Description);
-			toastService.ShowSuccess( $"Copied Successfully at {DateTime.Now:hh:mm}","Happy Days");
+			toastService.ShowSuccess( $"Copied Successfully at {DateTime.Now:hh:mm}");
 		}
 		private void IncreaseHeight()
 		{

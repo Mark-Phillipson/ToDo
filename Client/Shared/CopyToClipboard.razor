@@ -4,6 +4,12 @@
 
     <br>
     <br>
+    @if (isOffline)
+    {
+        <div class="alert alert-warning" role="alert">
+            You are offline. Saving will update local storage only.
+        </div>
+    }
     <textarea style="font-size:x-large" rows="@Rows" class="form-control" @bind="Text" @bind:event="oninput" placeholder="Dictate here, and then click Copy to put in the clipboard.  Click Save to put into the to do list." id="DictationBox" />
 
     <span class="text-danger">

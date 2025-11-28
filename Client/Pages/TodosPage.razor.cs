@@ -23,27 +23,62 @@ namespace BlazorApp.Client.Pages
 		[Inject] public required HttpClient Http { get; set; }
 		[Inject] public required IJSRuntime JSRuntime{ get; set; }
 		[Inject] public required IToastService toastService{ get; set; }
+		[Inject] public required BlazorApp.Client.Services.OfflineStateService OfflineService { get; set; }
 
 #pragma warning disable 414, 649, 169
 		private string message = "";
 		private bool _loadFailed = false;
 		ElementReference SearchInput;
 		private int textboxAreaRows = 2;
+		private bool isOffline = false;
 #pragma warning restore 414, 649, 169
 		private string SearchTerm { get; set; } = string.Empty;
 		public bool ShowCompleted { get; set; } = true;
 
-		protected override async Task OnInitializedAsync()
-		{
-			await LoadData();
-		}
+        protected override async Task OnInitializedAsync()
+        {
+            isOffline = OfflineService.IsOffline;
+            OfflineService.StatusChanged += OfflineStatusChanged;
+            await LoadData();
+        }
+
+        private void OfflineStatusChanged(bool offline)
+        {
+            isOffline = offline;
+            if (offline)
+                toastService.ShowWarning("You're now offline. Changes will be saved locally.");
+            else
+                toastService.ShowSuccess("You're back online!");
+            InvokeAsync(StateHasChanged);
+        }
+
+        public void Dispose()
+        {
+            OfflineService.StatusChanged -= OfflineStatusChanged;
+        }
 
 		private async Task LoadData()
 		{
+			// First, try to load from local storage (this works offline)
 			todos = await LocalStorage.GetItemAsync<List<ToDoList>>("todo") ?? new List<ToDoList>();
+			
+			// If no local data, try to load from sample data
 			if (todos.Count == 0)
 			{
-				todos = await Http.GetFromJsonAsync<List<ToDoList>>("sample-data/todo.json") ?? new List<ToDoList>();
+				try
+				{
+					todos = await Http.GetFromJsonAsync<List<ToDoList>>("sample-data/todo.json") ?? new List<ToDoList>();
+				}
+				catch (Exception ex)
+				{
+					// If we're offline or sample data fails to load, just use an empty list
+					Console.WriteLine($"Failed to load sample data: {ex.Message}");
+					todos = new List<ToDoList>();
+					if (!isOffline)
+					{
+						toastService.ShowWarning("Unable to load sample data. Starting with an empty list.");
+					}
+				}
 			}
 		}
 
@@ -77,13 +112,17 @@ namespace BlazorApp.Client.Pages
 			todos.Remove(toDoList);
 		}
 
-		private async Task CallChangeAsync(string elementId)
-		{
-			await JSRuntime.InvokeVoidAsync("CallChange", elementId);
-		}
 		private async Task ReloadTodosAsync()
 		{
 			await LoadData();
+			if (isOffline)
+			{
+				toastService.ShowInfo("You're currently offline. Showing cached data.");
+			}
+			else
+			{
+				toastService.ShowSuccess("Data reloaded successfully!");
+			}
 		}
 		async Task DownloadFileAsync()
 		{

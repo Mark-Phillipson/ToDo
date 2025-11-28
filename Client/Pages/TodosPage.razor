@@ -5,12 +5,18 @@
 }
 else
 {
+	@if (isOffline)
+	{
+		<div class="alert alert-warning" role="alert">
+			<i class="oi oi-warning"></i> You are currently offline. Changes will be saved locally.
+		</div>
+	}
 	<div class="d-none d-sm-block">
 		<h1 style="text-align:left;float:left">@title </h1>
 		<button class="btn btn-info btn-sm m-2" type="button" @onclick="@( ( ) => IncreaseHeight(  ) )"><i class="oi oi-fullscreen-enter"></i></button>
 		<button class="btn btn-warning btn-sm" type="button" @onclick="@( ( ) => DecreaseHeight(  ) )"><i class="oi oi-fullscreen-exit"></i></button>
 		<input class="form-control" style="text-align:right;float:right;max-width:400px" type="text" @bind="SearchTerm"
-				 id="SearchTermBig" @bind:event="oninput" @onblur="@(e => CallChangeAsync("SearchTermBig"))" placeholder="Type to filter" />
+				 id="SearchTermBig" @bind:event="oninput" placeholder="Type to filter" />
 		<hr style="clear:both;" />
 		<div class="row">
 			<div class="btn-group">
@@ -30,7 +36,7 @@ else
 	</div>
 	<div class="d-sm-none">
 		<h4 style="text-align:left;float:left">@title</h4>
-		<input class="form-control" style="text-align:right;float:right;max-width:100px" type="text" @bind="SearchTerm" @bind:event="oninput" id="SearchTermSmall" @onblur="@(e => CallChangeAsync("SearchTermSmall"))" placeholder="Search" />
+		<input class="form-control" style="text-align:right;float:right;max-width:100px" type="text" @bind="SearchTerm" @bind:event="oninput" id="SearchTermSmall" placeholder="Search" />
 		<hr style="clear:both;" />
 		<div class="btn-group">
 			<div class="m-1"><button class="btn btn-sm btn-success" @onclick="AddToDoAsync"><span class="oi oi-plus" aria-hidden="true"></span></button></div>
@@ -73,16 +79,23 @@ else
 											@todo.Description
 										</td>
 										<td>
-											<a href="@todo.PictureUrl"><img src='@todo.PictureUrl' width="200px" /></a>
+											@if (!string.IsNullOrWhiteSpace(todo.PictureUrl))
+											{
+												<a href="@todo.PictureUrl"><img src='@todo.PictureUrl' width="200px" /></a>
+											}
+											else
+											{
+												<span>-</span>
+											}
 										</td>
 									}
 									else
 									{
 										<td>
-											<textarea rows="@textboxAreaRows" class="form-control" @bind="todo.Description" @bind:event="oninput" @onblur="@(e => CallChangeAsync($"{todo.Id}DescriptionInputBig"))" id="@($"{todo.Id}DescriptionInputBig")" />
+											<textarea rows="@textboxAreaRows" class="form-control" @bind="todo.Description" @bind:event="oninput" id="@($"{todo.Id}DescriptionInputBig")" />
 										</td>
 										<td>
-											<input class="form-control" @bind="todo.PictureUrl" @bind:event="oninput" @onblur="@(e => CallChangeAsync($"{todo.Id}PictureUrlInput"))" id="@($"{todo.Id}PictureUrlInput")" />
+											<input class="form-control" @bind="todo.PictureUrl" @bind:event="oninput" id="@($"{todo.Id}PictureUrlInput")" />
 										</td>
 									}
 									<td>
@@ -121,9 +134,12 @@ else
 											@todo.Description
 										</td>
 									</tr>
-									<tr>
-										<a href="@todo.PictureUrl"><img src='@todo.PictureUrl' width="50px" /></a>
-									</tr>
+									@if (!string.IsNullOrWhiteSpace(todo.PictureUrl))
+									{
+										<tr>
+											<a href="@todo.PictureUrl"><img src='@todo.PictureUrl' width="50px" /></a>
+										</tr>
+									}
 								}
 								else
 								{
@@ -136,7 +152,7 @@ else
 									</tr>
 									<tr>
 										<td colspan="3">
-											<textarea rows="3" class="form-control" @bind="todo.Description" @bind:event="oninput" @onblur="@(e => CallChangeAsync($"{todo.Id}DescriptionInput"))" id="@($"{todo.Id}DescriptionInput")" />
+											<textarea rows="3" class="form-control" @bind="todo.Description" @bind:event="oninput" id="@($"{todo.Id}DescriptionInput")" />
 										</td>
 									</tr>
 									<tr>
@@ -144,7 +160,7 @@ else
 									</tr>
 									<tr>
 										<td colspan="3">
-											<input class="form-control form-control-sm" @bind="todo.PictureUrl" @bind:event="oninput" @onblur="@(e => CallChangeAsync($"{todo.Id}PictureUrlInput"))" id="@($"{todo.Id}PictureUrlInput")" />
+											<input class="form-control form-control-sm" @bind="todo.PictureUrl" @bind:event="oninput" id="@($"{todo.Id}PictureUrlInput")" />
 										</td>
 									</tr>
 								}

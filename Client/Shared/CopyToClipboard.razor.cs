@@ -20,7 +20,9 @@ namespace BlazorApp.Client.Shared
 		[Inject] public required ILocalStorageService LocalStorage { get; set; }
 		[Inject] public required IJSRuntime JavascriptRuntime { get; set; }
 		[Inject] public required HttpClient Http { get; set; }	[Parameter] public int Rows { get; set; }
+		[Inject] public required BlazorApp.Client.Services.OfflineStateService OfflineService { get; set; }
 	private List<ToDoList> todos = new();
+	private bool isOffline = false;
 	public string Text { get; set; } = string.Empty;
 	public string Result { get; set; } = string.Empty;       
 		private async Task CopyTextToClipboard()
@@ -38,10 +40,19 @@ namespace BlazorApp.Client.Shared
 
 		private async Task LoadData()
 		{
+			// First, try to load from local storage (this works offline)
 			todos = await LocalStorage.GetItemAsync<List<ToDoList>>("todo") ?? new List<ToDoList>();
-			if (todos.Count == 0)
+			// If no local data, try to load from sample data
+			if (todos.Count == 0 && !OfflineService.IsOffline)
 			{
-				todos = await Http.GetFromJsonAsync<List<ToDoList>>("sample-data/todo.json") ?? new List<ToDoList>();
+				try
+				{
+					todos = await Http.GetFromJsonAsync<List<ToDoList>>("sample-data/todo.json") ?? new List<ToDoList>();
+				}
+				catch
+				{
+					todos = new List<ToDoList>();
+				}
 			}
 		}
 
@@ -52,6 +63,11 @@ namespace BlazorApp.Client.Shared
 				return;
 			}
 			await LoadData();
+			if (isOffline)
+			{
+				// We remain fully functional offline; message string can reflect offline state
+				Result = "Saving locally (offline).";
+			}
 			var titleLength = Text.Length;
 			if (titleLength > 30)
 			{
@@ -60,6 +76,12 @@ namespace BlazorApp.Client.Shared
 			ToDoList toDoList = new ToDoList { DateCreated = DateTime.Now.Date, Title = $"{Text.Substring(0, titleLength).ToUpper()}..", Description = Text, Completed = false };
 			todos.Add(toDoList);
 			await LocalStorage.SetItemAsync<List<ToDoList>>("todo", todos);
+		}
+
+		protected override void OnInitialized()
+		{
+			isOffline = OfflineService.IsOffline;
+			OfflineService.StatusChanged += s => { isOffline = s; InvokeAsync(StateHasChanged); };
 		}
 
 	}

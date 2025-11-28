@@ -10,7 +10,8 @@
     <link href="css/app.css" rel="stylesheet" />
    	<link href="manifest.json" rel="manifest" />
 	<link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
-	<link href="_content/Blazored.Toast/blazored-toast.min.css" rel="stylesheet" />
+	<!-- Removed broken blazored-toast.min.css (404 in publish); bundle css below covers styles -->
+	<link href="_content/Blazored.Toast/Blazored.Toast.bundle.scp.css" rel="stylesheet" />
     <link href="Client.styles.css" rel="stylesheet" />
 </head>
 
@@ -35,16 +36,22 @@
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 	<script src="js/inputfile.js"></script>
 	<script>
-		function CallChange(elementId) {
-			var element = document.getElementById(elementId);
-			if (element) {
-				var event = new Event('keyup');
-				//var event = new Event('change');
-				element.addEventListener('keyup', function (e) { }, false)
-				element.dispatchEvent(event);
-				console.log(elementId + " keyup fired " + element.localName)
+		// Online/Offline status monitoring
+		window.blazorOnlineStatus = {
+			isOnline: function() {
+				return navigator.onLine;
+			},
+			initialize: function(dotNetHelper) {
+				window.addEventListener('online', function() {
+					dotNetHelper.invokeMethodAsync('OnOnlineStatusChanged', true);
+				});
+				window.addEventListener('offline', function() {
+					dotNetHelper.invokeMethodAsync('OnOnlineStatusChanged', false);
+				});
 			}
-		}
+		};
+
+		// Removed synthetic CallChange keyup trigger; Blazor two-way binding handles updates.
 		window.setFocus = (elementId) => {
 			setTimeout(internalFocus, 10, elementId);
 		};

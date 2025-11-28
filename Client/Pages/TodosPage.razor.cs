@@ -18,11 +18,11 @@ namespace BlazorApp.Client.Pages
 {
 	public partial class TodosPage
 	{
-		private List<ToDoList> todos;
-		[Inject] public ILocalStorageService LocalStorage { get; set; }
-		[Inject] HttpClient Http { get; set; }
-		[Inject] IJSRuntime JSRuntime{ get; set; }
-		[Inject] IToastService toastService{ get; set; }
+		private List<ToDoList> todos = new();
+		[Inject] public required ILocalStorageService LocalStorage { get; set; }
+		[Inject] public required HttpClient Http { get; set; }
+		[Inject] public required IJSRuntime JSRuntime{ get; set; }
+		[Inject] public required IToastService toastService{ get; set; }
 
 #pragma warning disable 414, 649, 169
 		private string message = "";
@@ -30,7 +30,7 @@ namespace BlazorApp.Client.Pages
 		ElementReference SearchInput;
 		private int textboxAreaRows = 2;
 #pragma warning restore 414, 649, 169
-		private string SearchTerm { get; set; }
+		private string SearchTerm { get; set; } = string.Empty;
 		public bool ShowCompleted { get; set; } = true;
 
 		protected override async Task OnInitializedAsync()
@@ -40,10 +40,10 @@ namespace BlazorApp.Client.Pages
 
 		private async Task LoadData()
 		{
-			todos = await LocalStorage.GetItemAsync<List<ToDoList>>("todo");
-			if (todos == null || todos.Count == 0)
+			todos = await LocalStorage.GetItemAsync<List<ToDoList>>("todo") ?? new List<ToDoList>();
+			if (todos.Count == 0)
 			{
-				todos = await Http.GetFromJsonAsync<List<ToDoList>>("sample-data/todo.json");
+				todos = await Http.GetFromJsonAsync<List<ToDoList>>("sample-data/todo.json") ?? new List<ToDoList>();
 			}
 		}
 
@@ -68,7 +68,7 @@ namespace BlazorApp.Client.Pages
 		}
 		private async Task AddToDoAsync()
 		{
-			ToDoList toDoList = new ToDoList { DateCreated = DateTime.Now.Date };
+			ToDoList toDoList = new ToDoList { DateCreated = DateTime.Now.Date, Title = "", Description = "" };
 			todos.Add(toDoList);
 			await JSRuntime.InvokeVoidAsync("setFocus", $"{toDoList.Id}TitleInputBig");
 		}
@@ -100,17 +100,18 @@ namespace BlazorApp.Client.Pages
 		{
 			var  files = e.GetMultipleFiles(1);
 			var file=files.FirstOrDefault();
-			List<ToDoList> todosImported;
+			if (file == null) return;
+			List<ToDoList>? todosImported;
 			byte[] result;
 			using (var reader = file.OpenReadStream())
 			{
 				try
 				{
 					result= new byte[reader.Length];
-					await reader.ReadAsync(result,0,( int )reader.Length);
-					var text=System.Text.Encoding.ASCII.GetString(result);
-					todosImported = JsonConvert.DeserializeObject<List<ToDoList>>(text);
-					if (todosImported.Count > 0)
+					await reader.ReadExactlyAsync(result, 0, (int)reader.Length);
+				var text=System.Text.Encoding.ASCII.GetString(result);
+				todosImported = JsonConvert.DeserializeObject<List<ToDoList>>(text);
+				if (todosImported != null && todosImported.Count > 0)
 					{
 						foreach (var todo in todosImported)
 						{

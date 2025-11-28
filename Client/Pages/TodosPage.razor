@@ -18,37 +18,37 @@ else
 		<input class="form-control" style="text-align:right;float:right;max-width:400px" type="text" @bind="SearchTerm"
 				 id="SearchTermBig" @bind:event="oninput" placeholder="Type to filter" />
 		<hr style="clear:both;" />
-		<div class="row">
-			<div class="btn-group">
-				<div class="col-md-2 m-1">
-					<button class="btn btn-success" @onclick="AddToDoAsync">Add <span class="oi oi-plus" aria-hidden="true"></span></button>
-				</div>
-				<div class="col-md-3 m-1">
-					<button type="submit" class="btn btn-success">Save <i class="oi oi-document"></i></button>
-				</div>
-				<div class="col-md-2 m-1">
-					<button class="btn btn-info" @onclick="ReloadTodosAsync">Reload <i class="oi oi-loop-circular"></i></button>
-				</div>
-				<label class="col-md-2 m-1 col-form-label col-form-label-sm">Show Completed</label>
-				<input class="form-check-input col-md-2 m-1" type="checkbox" style="min-height:60px;min-width:90px" @bind="ShowCompleted" />
-			</div>
-		</div>
 	</div>
 	<div class="d-sm-none">
 		<h4 style="text-align:left;float:left">@title</h4>
 		<input class="form-control" style="text-align:right;float:right;max-width:100px" type="text" @bind="SearchTerm" @bind:event="oninput" id="SearchTermSmall" placeholder="Search" />
 		<hr style="clear:both;" />
-		<div class="btn-group">
-			<div class="m-1"><button class="btn btn-sm btn-success" @onclick="AddToDoAsync"><span class="oi oi-plus" aria-hidden="true"></span></button></div>
-			<div class="m-1"><button type="submit" class="btn btn-sm btn-success">Save</button></div>
-			<div class="m-1"><button class="btn btn-sm btn-info" @onclick="ReloadTodosAsync">Reload</button></div>
-			<label class="m-1 col-form-label col-form-label-sm">Completed</label>
-			<input class="form-check-input m-1" type="checkbox" @bind="ShowCompleted" />
-		</div>
 	</div>
 
 
 	<EditForm Model="todos" OnValidSubmit="SaveToDoAsync">
+		<div class="d-none d-sm-block">
+			<div class="row mb-3">
+				<div class="col-12">
+					<div class="btn-group" role="group">
+						<button class="btn btn-success" type="button" @onclick="AddToDoAsync">Add <span class="oi oi-plus" aria-hidden="true"></span></button>
+						<button type="submit" class="btn btn-success">Save <i class="oi oi-document"></i></button>
+						<button class="btn btn-info" type="button" @onclick="ReloadTodosAsync">Reload <i class="oi oi-loop-circular"></i></button>
+					</div>
+					<label class="ms-3 me-2 align-middle">Show Completed</label>
+					<input class="form-check-input align-middle" type="checkbox" style="min-height:30px;min-width:30px" @bind="ShowCompleted" />
+				</div>
+			</div>
+		</div>
+		<div class="d-sm-none">
+			<div class="btn-group">
+				<div class="m-1"><button class="btn btn-sm btn-success" type="button" @onclick="AddToDoAsync"><span class="oi oi-plus" aria-hidden="true"></span></button></div>
+				<div class="m-1"><button type="submit" class="btn btn-sm btn-success">Save</button></div>
+				<div class="m-1"><button class="btn btn-sm btn-info" type="button" @onclick="ReloadTodosAsync">Reload</button></div>
+				<label class="m-1 col-form-label col-form-label-sm">Completed</label>
+				<input class="form-check-input m-1" type="checkbox" @bind="ShowCompleted" />
+			</div>
+		</div>
 		<DataAnnotationsValidator />
 		<ValidationSummary />
 		<div class="d-none d-sm-block">
@@ -184,19 +184,15 @@ else
 			</table>
 		</div>
 		<div class="d-none d-sm-block">
-			<div class="row">
-				<div class="btn-group">
-					<div class="col-md-2 m-1">
-						<button class="btn btn-success" @onclick="AddToDoAsync">Add <span class="oi oi-plus" aria-hidden="true"></span></button>
-					</div>
-					<div class="col-md-3 m-1">
+			<div class="row mb-3">
+				<div class="col-12">
+					<div class="btn-group" role="group">
+						<button class="btn btn-success" type="button" @onclick="AddToDoAsync">Add <span class="oi oi-plus" aria-hidden="true"></span></button>
 						<button type="submit" class="btn btn-success">Save <i class="oi oi-document"></i></button>
+						<button class="btn btn-info" type="button" @onclick="ReloadTodosAsync">Reload <i class="oi oi-loop-circular"></i></button>
 					</div>
-					<div class="col-md-2 m-1">
-						<button class="btn btn-info" @onclick="ReloadTodosAsync">Reload <i class="oi oi-loop-circular"></i></button>
-					</div>
-					<label class="col-md-2 m-1 col-form-label col-form-label-sm">Show Completed</label>
-					<input class="form-check-input col-md-2 m-1" style="min-height:60px;min-width:90px" type="checkbox" @bind="ShowCompleted" />
+					<label class="ms-3 me-2 align-middle">Show Completed</label>
+					<input class="form-check-input align-middle" type="checkbox" style="min-height:30px;min-width:30px" @bind="ShowCompleted" />
 				</div>
 			</div>
 		</div>

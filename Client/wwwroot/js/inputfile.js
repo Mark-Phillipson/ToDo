@@ -201,3 +201,23 @@
         };
     })();
 })();
+// Store the beforeinstallprompt event for PWA install
+window.deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    window.deferredPrompt = e;
+});
+
+window.installPWA = async function () {
+    if (window.deferredPrompt) {
+        window.deferredPrompt.prompt();
+        const { outcome } = await window.deferredPrompt.userChoice;
+        window.deferredPrompt = null;
+        return outcome;
+    }
+    return null;
+}
+
+window.refreshApp = function () {
+    window.location.reload(true);
+}

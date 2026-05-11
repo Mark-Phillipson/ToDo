@@ -89,7 +89,7 @@ namespace BlazorApp.Client.Pages
 			toastService.ShowSuccess("All to dos have been saved successfully!");
 		}
 
-		private string title { get; set; } = "Todo List";
+		private string title { get; set; } = "Clipboard History";
 		//usersJson = LoadJson(@"services\users.json");
 		//users = JsonConvert.DeserializeObject<List<AspNetUser>>(usersJson);
 
@@ -126,11 +126,9 @@ namespace BlazorApp.Client.Pages
 		}
 		async Task DownloadFileAsync()
 		{
-			//var text = todos.ToList().ToString();
-			
 			var text = JsonConvert.SerializeObject(todos.ToList());
 			var bytes = System.Text.Encoding.UTF8.GetBytes(text);
-			await FileUtility.SaveAs(JSRuntime, "todo.json", bytes);
+			await FileUtility.SaveAs(JSRuntime, "clipboard-items.json", bytes);
 
 		}
 		private IList<string> files = new List<string>();

@@ -1,0 +1,69 @@
+@page "/clipboard"
+@inherits BlazorApp.Client.Pages.ClipboardPage
+
+<h1>Clipboard</h1>
+
+<div class="mb-3">
+    <input class="form-control" placeholder="Search" @bind="SearchTerm" @bind:event="oninput" />
+</div>
+
+<!-- Desktop / larger screens: table layout -->
+<div class="d-none d-sm-block">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Captured</th>
+                <th>Content</th>
+                <th>Pinned</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in FilteredItems)
+            {
+                <tr>
+                    <td>@FormatDateTime(item.DateCaptured)</td>
+                    <td>@item.Content</td>
+                    <td>@(item.Pinned ? "★" : "")</td>
+                    <td class="text-nowrap">
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-info" @onclick="() => CopyItemAsync(item)">Copy</button>
+                            <button class="btn btn-sm btn-secondary" @onclick="() => TogglePin(item)">@((item.Pinned) ? "Unpin" : "Pin")</button>
+                            <button class="btn btn-sm btn-danger" @onclick="() => DeleteItem(item)">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Mobile view: stacked cards with full-width buttons -->
+<div class="d-block d-sm-none">
+    @foreach (var item in FilteredItems)
+    {
+        <div class="card clipboard-item mb-2">
+            <div class="card-body p-2">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="small text-muted">@FormatDateTime(item.DateCaptured)</div>
+                    @if (item.Pinned)
+                    {
+                        <div class="text-warning">★</div>
+                    }
+                </div>
+                <p class="card-text mt-2">@item.Content</p>
+                <div class="row g-1">
+                    <div class="col-4">
+                        <button class="btn btn-sm btn-primary w-100" @onclick="() => CopyItemAsync(item)">Copy</button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-sm btn-secondary w-100" @onclick="() => TogglePin(item)">@((item.Pinned) ? "Unpin" : "Pin")</button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-sm btn-danger w-100" @onclick="() => DeleteItem(item)">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

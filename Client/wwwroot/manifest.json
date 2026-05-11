@@ -1,6 +1,6 @@
 {
-  "name": "TodoList",
-  "short_name": "todo",
+  "name": "Clipboard Manager",
+  "short_name": "clipboard",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",

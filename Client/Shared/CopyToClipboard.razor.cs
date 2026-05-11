@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Blazored.LocalStorage.StorageOptions;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
+using BlazorApp.Client.Services;
 
 namespace BlazorApp.Client.Shared
 {
@@ -19,16 +20,20 @@ namespace BlazorApp.Client.Shared
 	{
 		[Inject] public required ILocalStorageService LocalStorage { get; set; }
 		[Inject] public required IJSRuntime JavascriptRuntime { get; set; }
-		[Inject] public required HttpClient Http { get; set; }	[Parameter] public int Rows { get; set; }
+		[Inject] public required HttpClient Http { get; set; }
+		[Parameter] public int Rows { get; set; }
 		[Inject] public required BlazorApp.Client.Services.OfflineStateService OfflineService { get; set; }
+		[Inject] public required ClipboardService ClipboardService { get; set; }
 	private List<ToDoList> todos = new();
 	private bool isOffline = false;
 	public string Text { get; set; } = string.Empty;
 	public string Result { get; set; } = string.Empty;       
 		private async Task CopyTextToClipboard()
 		{
-			await JavascriptRuntime.InvokeVoidAsync(
-				"clipboardCopy.copyText", Text);
+			if (string.IsNullOrWhiteSpace(Text)) return;
+			await JavascriptRuntime.InvokeVoidAsync("clipboardCopy.copyText", Text);
+			// Save into clipboard history
+			await ClipboardService.AddAsync(Text, "dictation");
 			Result = $"Copied Successfully at {DateTime.Now:hh:mm}";
 		}
 		private async Task ClearDictationAsync()
@@ -40,7 +45,7 @@ namespace BlazorApp.Client.Shared
 
 		private async Task LoadData()
 		{
-			// First, try to load from local storage (this works offline)
+			// Keep legacy behavior for now (not used by new flow)
 			todos = await LocalStorage.GetItemAsync<List<ToDoList>>("todo") ?? new List<ToDoList>();
 			// If no local data, try to load from sample data
 			if (todos.Count == 0 && !OfflineService.IsOffline)
@@ -58,24 +63,13 @@ namespace BlazorApp.Client.Shared
 
 		private async Task AddToDoAsync()
 		{
-			if (string.IsNullOrEmpty(Text) || Text.Length < 1)
-			{
-				return;
-			}
-			await LoadData();
+			if (string.IsNullOrWhiteSpace(Text)) return;
 			if (isOffline)
 			{
-				// We remain fully functional offline; message string can reflect offline state
 				Result = "Saving locally (offline).";
 			}
-			var titleLength = Text.Length;
-			if (titleLength > 30)
-			{
-				titleLength = 30;
-			}
-			ToDoList toDoList = new ToDoList { DateCreated = DateTime.Now.Date, Title = $"{Text.Substring(0, titleLength).ToUpper()}..", Description = Text, Completed = false };
-			todos.Add(toDoList);
-			await LocalStorage.SetItemAsync<List<ToDoList>>("todo", todos);
+			await ClipboardService.AddAsync(Text, "dictation");
+			Text = string.Empty;
 		}
 
 		protected override void OnInitialized()

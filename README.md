@@ -1,10 +1,10 @@
-# ToDo
-Localised to-do app with multi-line dictation box for creating messages by voice on Mobile Device
+# Clipboard Manager
+Local first clipboard manager with a multi-line dictation box for composing longer snippets by voice.
 
-# Stand-alone Blazor Web Assembly PWA
+## Stand-alone Blazor Web Assembly PWA
 
-Includes a stand-alone Blazor web assembly web application that is also a PWA for creating a to-do list that is stored in local storage only.
+This repository contains a Blazor WebAssembly progressive web app (PWA) for capturing and retrieving clipboard snippets stored locally in the browser.
 
-<img src="https://github.com/Mark-Phillipson/blazor-default-template/blob/master/MSPApplication.UI/wwwroot/images/PWATo-DoList.png" align="center" width="40%">
+![Clipboard Manager](https://raw.githubusercontent.com/Mark-Phillipson/ToDo/main/Client/wwwroot/icon-512.png)
 
 

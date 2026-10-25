@@ -68,14 +68,19 @@
 			}
 		},
 		{
-			"type": "func",
-			"dependsOn": "build",
+			"label": "watch",
+			"command": "dotnet",
+			"args": [
+				"watch",
+				"run",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"type": "process",
+			"problemMatcher": "$msCompile",
 			"options": {
-				"cwd": "${workspaceFolder}/Api/bin/Debug/net6.0"
-			},
-			"command": "host start",
-			"isBackground": true,
-			"problemMatcher": "$func-watch"
+				"cwd": "${workspaceFolder}/Client"
+			}
 		}
 	]
 }

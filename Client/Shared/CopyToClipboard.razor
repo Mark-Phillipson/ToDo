@@ -10,7 +10,7 @@
             You are offline. Saving will update local storage only.
         </div>
     }
-    <textarea style="font-size:x-large" rows="@Rows" class="form-control" @bind="Text" @bind:event="oninput" placeholder="Dictate here, and then click Copy to put in the clipboard.  Click Save to put into the to do list." id="DictationBox" />
+    <textarea style="font-size:x-large" rows="@Rows" class="form-control" @bind="Text" @bind:event="oninput" placeholder="Dictate here, and then tap Copy to put in the clipboard.  Click Save to put into the local snippets list.  Use the 'Saved Snippets' button to view them. :)" id="DictationBox" />
 
     <span class="text-danger">
         @Result
@@ -18,9 +18,12 @@
 </span>
 
 <div style="position:absolute; top: 10px; right: 10px;">
+    <a class="btn btn-secondary btn-sm" href="clipboard">
+                 Saved Snippets
+            </a>
     <button type="button" class="btn btn-primary btn-sm" @onclick="CopyTextToClipboard">Copy</button>
-    <button type="button" class="btn btn-outline-danger btn-sm" @onclick="ClearDictationAsync">Clear</button>
-    <button type="button" class="btn btn-outline-success btn-sm" @onclick="AddToDoAsync">Save</button>
+    <button type="button" class="btn btn-danger btn-sm" @onclick="ClearDictationAsync">Clear</button>
+    <button type="button" class="btn btn-success btn-sm" @onclick="AddToDoAsync">Save</button>
 </div>
 </div>
 

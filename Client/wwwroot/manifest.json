@@ -1,6 +1,6 @@
 {
-  "name": "Clipboard Manager",
-  "short_name": "clipboard",
+  "name": "Local Snippets Manager",
+  "short_name": "snippets",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",

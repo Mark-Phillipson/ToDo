@@ -1,0 +1,3 @@
+#DictationBox {
+  overflow-y: auto;   /* or hidden if you implement auto-grow JS */
+}

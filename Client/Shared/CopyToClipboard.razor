@@ -10,20 +10,25 @@
             You are offline. Saving will update local storage only.
         </div>
     }
-    <textarea style="font-size:x-large" rows="@Rows" class="form-control" @bind="Text" @bind:event="oninput" placeholder="Dictate here, and then tap Copy to put in the clipboard.  Click Save to put into the local snippets list.  Use the 'Saved Snippets' button to view them. :)" id="DictationBox" />
+    <textarea style="font-size:x-large" rows="@Rows" class="form-control" @bind="Text" @bind:event="oninput" placeholder="Dictate here, and then tap Copy icon to put in the clipboard.  Tap Check Icon to put into the local snippets list.  Use the '...' button to view them. " id="DictationBox" />
 
     <span class="text-danger">
         @Result
+    </span>
 
-</span>
-
-<div style="position:absolute; top: 10px; right: 10px;">
-    <a class="btn btn-secondary btn-sm" href="clipboard">
-                 Saved...
-            </a>
-    <button type="button" class="btn btn-primary btn-sm" @onclick="CopyTextToClipboard">Copy</button>
-    <button type="button" class="btn btn-danger btn-sm" @onclick="ClearDictationAsync">Clear</button>
-    <button type="button" class="btn btn-success btn-sm" @onclick="AddToDoAsync">Save</button>
-</div>
+    <div style="position:absolute; top: 10px; right: 10px;">
+        <a class="btn btn-secondary" href="clipboard">
+            ...
+        </a>
+        <button type="button" class="btn btn-primary" @onclick="CopyTextToClipboard" title="Copy" aria-label="Copy">
+            <span class="oi oi-clipboard" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-danger" @onclick="ClearDictationAsync" title="Clear" aria-label="Clear">
+            <span class="oi oi-trash" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-success" @onclick="AddToDoAsync" title="Save" aria-label="Save">
+            <span class="oi oi-check" aria-hidden="true"></span>
+        </button>
+    </div>
 </div>
 
